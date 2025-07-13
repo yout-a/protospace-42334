@@ -1,0 +1,24 @@
+<div class="card">
+  <!-- 画像：添付があるときだけ -->
+  <% if prototype.image.attached? %>
+    <%= link_to prototype_path(prototype) do %>
+      <%= image_tag url_for(prototype.image), class: 'card__img' %>
+    <% end %>
+  <% end %>
+
+  <div class="card__body">
+    <!-- タイトル -->
+    <%= link_to prototype.title,
+                prototype_path(prototype),
+                class: 'card__title' %>
+
+    <!-- キャッチコピー -->
+    <p class="card__summary"><%= prototype.catch_copy %></p>
+
+    <!-- 投稿者 -->
+    <%= link_to "by #{prototype.user.name}",
+                user_path(prototype.user),
+                class: 'card__user' %>
+  </div>
+</div>
+

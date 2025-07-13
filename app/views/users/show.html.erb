@@ -1,0 +1,33 @@
+<main class="main">
+  <div class="inner user__wrapper">
+
+    <h1 class="page-heading"><%= @user.name %> さんのプロフィール</h1>
+
+    <table class="table">
+      <tr>
+        <td class="table__col1">プロフィール</td>
+        <td class="table__col2"><%= @user.profile %></td>
+      </tr>
+      <tr>
+        <td class="table__col1">職業</td>
+        <td class="table__col2"><%= @user.occupation %></td>
+      </tr>
+      <tr>
+        <td class="table__col1">役職</td>
+        <td class="table__col2"><%= @user.position %></td>
+      </tr>
+    </table>
+
+    <h2 class="page-heading"><%= @user.name %> さんの投稿一覧</h2>
+
+    <% if @user.prototypes.any? %>
+      <div class="cards user__card">
+        <%= render partial: "prototypes/prototype", collection: @user.prototypes, as: :prototype %>
+      </div>
+    <% else %>
+      <p>このユーザーはまだ投稿していません。</p>
+    <% end %>
+
+  </div>
+</main>
+
