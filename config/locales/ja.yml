@@ -1,0 +1,20 @@
+ja:
+  activerecord:
+    attributes:
+      prototype:
+        title:       "プロトタイプの名称"
+        catch_copy:  "キャッチコピー"
+        concept:     "コンセプト"
+        image:       "プロトタイプの画像"
+    errors:
+      models:
+        prototype:
+          attributes:
+            title:
+              blank: "を入力してください"
+            catch_copy:
+              blank: "を入力してください"
+            concept:
+              blank: "を入力してください"
+            image:
+              blank: "を選択してください"

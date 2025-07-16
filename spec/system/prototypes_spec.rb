@@ -2,7 +2,9 @@
 require 'rails_helper'
 
 RSpec.describe 'プロトタイプ投稿機能', type: :system do
-  before { driven_by(:rack_test) }
+  before do
+    driven_by :rack_test
+  end
 
   let(:user) { create(:user) }
 
@@ -31,18 +33,16 @@ RSpec.describe 'プロトタイプ投稿機能', type: :system do
     end
 
     context '必要情報をすべて入力している場合' do
-      it '投稿できてトップページに遷移し、投稿内容が表示されること' do
-        fill_in 'プロトタイプ名', with: 'My Prototype'
-        fill_in 'キャッチコピー',   with: 'This is a catch copy'
-        fill_in 'コンセプト',       with: 'Prototype concept'
-        attach_file '画像', Rails.root.join('spec/fixtures/files/test_image.png')
-        click_button '投稿'
+      it 'トップページに遷移し、投稿内容が表示されること' do
+        fill_in 'プロトタイプの名称', with: 'My Prototype'
+        fill_in 'キャッチコピー',     with: 'This is a catch copy'
+        fill_in 'コンセプト',         with: 'Prototype concept'
+        attach_file 'プロトタイプの画像', Rails.root.join('spec/fixtures/files/test_image.png')
+        click_button '保存する'
 
-        # 投稿後はトップへリダイレクト
         expect(current_path).to eq root_path
-        # 投稿情報が表示される
-        within('.prototypes-list') do
-          expect(page).to have_selector "img[src*='test_image.png']"
+        within '.prototypes-list' do
+          expect(page).to have_selector("img[src*='test_image.png']")
           expect(page).to have_content 'My Prototype'
           expect(page).to have_content 'This is a catch copy'
           expect(page).to have_content user.name
@@ -51,31 +51,33 @@ RSpec.describe 'プロトタイプ投稿機能', type: :system do
     end
 
     context '必須情報が未入力の場合' do
-      it '投稿できずに同じページに留まり、入力済みの情報（画像以外）は消えないこと' do
-        fill_in 'プロトタイプ名', with: 'Incomplete'
-        # キャッチコピーとコンセプトは未入力
-        attach_file '画像', Rails.root.join('spec/fixtures/files/test_image.png')
-        click_button '投稿'
+      it '同じページに留まり、入力済みの情報は保持されること' do
+        fill_in 'プロトタイプの名称', with: 'Incomplete'
+        attach_file 'プロトタイプの画像', Rails.root.join('spec/fixtures/files/test_image.png')
+        click_button '保存する'
 
-        # エラー表示と同ページ
         expect(page).to have_current_path prototypes_path
         expect(page).to have_content 'キャッチコピーを入力してください'
-
-        # 入力済みフィールドは保持
-        expect(find_field('プロトタイプ名').value).to eq 'Incomplete'
-        # ファイル選択はクリアされる（ActiveStorage仕様）
-        expect(page).not_to have_selector "img[src*='test_image.png']"
+        expect(find_field('プロトタイプの名称').value).to eq 'Incomplete'
+        expect(page).not_to have_selector("img[src*='test_image.png']")
       end
     end
   end
 
   describe 'トップページの表示内容' do
-    let!(:prototype) { create(:prototype, user: user, name: 'Demo', catch_copy: 'Catch!', concept: 'Concept', images: [fixture_file_upload('files/test_image.png', 'image/png')]) }
+    let!(:prototype) do
+      create(:prototype,
+             user: user,
+             title: 'Demo',
+             catch_copy: 'Catch!',
+             concept: 'Concept',
+             image: fixture_file_upload(Rails.root.join('spec/fixtures/files/test_image.png'), 'image/png'))
+    end
 
-    it '投稿情報一覧にプロトタイプごとに画像・名称・キャッチコピー・投稿者名が表示され、リンク切れでないこと' do
+    it '投稿一覧に画像・名称・キャッチコピー・投稿者名が表示されること' do
       visit root_path
-      within("#prototype_#{prototype.id}") do
-        expect(page).to have_selector "img[src*='test_image.png']"
+      within "#prototype_#{prototype.id}" do
+        expect(page).to have_selector("img[src*='test_image.png']")
         expect(page).to have_content 'Demo'
         expect(page).to have_content 'Catch!'
         expect(page).to have_content user.name

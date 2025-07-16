@@ -1,7 +1,7 @@
 class PrototypesController < ApplicationController
   before_action :set_prototype, only: %i[show edit update destroy]
-  before_action :check_user_authentication, except: %i[index show]
   before_action :move_to_index, only: %i[edit update destroy]
+  before_action :authenticate_user!, except: %i[index show]
 
   # GET /prototypes
   def index
@@ -23,7 +23,7 @@ class PrototypesController < ApplicationController
   def create
     @prototype = current_user.prototypes.build(prototype_params)
     if @prototype.save
-      redirect_to @prototype, notice: "プロトタイプを作成しました"
+      redirect_to root_path, notice: "プロトタイプを作成しました"
     else
       render :new
     end
