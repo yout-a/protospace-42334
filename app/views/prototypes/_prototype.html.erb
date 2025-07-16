@@ -1,5 +1,5 @@
-<div class="card">
   <!-- 画像：添付があるときだけ -->
+  <div id="prototype_<%= prototype.id %>" class="card">
   <% if prototype.image.attached? %>
     <%= link_to prototype_path(prototype) do %>
       <%= image_tag url_for(prototype.image), class: 'card__img' %>
