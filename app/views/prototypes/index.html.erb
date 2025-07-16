@@ -9,11 +9,11 @@
     <% end %>
 
     <div class="prototypes-list">
-      <% @prototypes.each do |prototype| %>
-        <div class="card__wrapper">
+      <div class="card__wrapper">
+        <% @prototypes.each do |prototype| %>
           <%= render 'prototype', prototype: prototype %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
   </div>
 </main>
