@@ -13,4 +13,13 @@ class Prototype < ApplicationRecord
   validates :title,      presence: true, length: { maximum: 255 }
   validates :catch_copy, presence: true
   validates :concept,    presence: true
+  validate  :image_presence
+
+  private
+
+  def image_presence
+    unless image.attached?
+      errors.add(:image, "を添付してください")
+    end
+  end
 end
