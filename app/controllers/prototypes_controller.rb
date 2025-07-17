@@ -1,8 +1,6 @@
 class PrototypesController < ApplicationController
-  # new/edit → 未ログインなら新規登録へ
-  before_action :redirect_to_sign_up, only: %i[new edit]
   # index/show は誰でも、new/edit以外（create/update/destroy）は未ログインならログイン画面へ
-  before_action :authenticate_user!, except: %i[index show new edit]
+  before_action :authenticate_user!, except: %i[index show]
   before_action :set_prototype,   only: %i[show edit update destroy]
   before_action :move_to_index,   only: %i[edit update destroy]
 
